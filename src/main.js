@@ -1,53 +1,27 @@
 
 import './style.css'
 import { renderNavigation, renderFooter } from './JS/layout.js'
+import { getFavorites, addFavorite, removeFavorite, isFavorite, } from './JS/favorites.js'
 
 const currentPage = window.location.pathname
 
 let activePage = 'home'
 let pageContent = ''
 
+// Temporary book data for testing BookNest
 const books = [
-  {
-    id: 1,
-    title: 'The Silent Garden',
-    author: 'A. Morgan',
-    color: '#D9C6A5',
-  },
-  {
-    id: 2,
-    title: 'Beyond the Stars',
-    author: 'J. Bennett',
-    color: '#C5D0C1',
-  },
-  {
-    id: 3,
-    title: 'A River of Stories',
-    author: 'L. James',
-    color: '#D8B7AC',
-  },
-  {
-    id: 4,
-    title: 'The Hidden Library',
-    author: 'M. Ellis',
-    color: '#C5C1D7',
-  },
-  {
-    id: 5,
-    title: 'Letters to Tomorrow',
-    author: 'S. Parker',
-    color: '#E3D4B8',
-  },
-  {
-    id: 6,
-    title: 'The Last Chapter',
-    author: 'R. Bennett',
-    color: '#BFCED8',
-  },
+  { id: 1, title: 'The Silent Garden', author: 'A. Morgan', color: '#D9C6A5', },
+  { id: 2, title: 'Beyond the Stars', author: 'J. Bennett', color: '#C5D0C1', },
+  { id: 3, title: 'A River of Stories', author: 'L. James', color: '#D8B7AC', },
+  { id: 4, title: 'The Hidden Library', author: 'M. Ellis', color: '#C5C1D7', },
+  { id: 5, title: 'Letters to Tomorrow', author: 'S. Parker', color: '#E3D4B8', },
+  { id: 6, title: 'The Last Chapter', author: 'R. Bennett', color: '#BFCED8', },
 ]
 
-// Reusable book card
+// Render one book card with its favorite button
 function renderBookCard(book) {
+  const saved = isFavorite(book.id)
+
   return `
     <article class="h-full overflow-hidden rounded-2xl border border-[#E5DED1] bg-[#FFFEFA] p-4 transition duration-200 hover:-translate-y-1 hover:shadow-lg">
       <div
@@ -79,12 +53,21 @@ function renderBookCard(book) {
         <p class="mt-1 text-sm text-[#716B61]">
           By ${book.author}
         </p>
+
+        <button
+          type="button"
+          class="favorite-button mt-4 w-full rounded-xl border border-[#806746] px-4 py-2 text-sm font-semibold text-[#806746] transition hover:bg-[#806746] hover:text-white"
+          data-book-id="${book.id}"
+          aria-pressed="${saved}"
+        >
+          ${saved ? '♥ Remove from Favorites' : '♡ Add to Favorites'}
+        </button>
       </div>
     </article>
   `
 }
 
-// Reusable responsive book grid
+// Render a responsive grid of books
 function renderBookGrid(bookList = books) {
   return `
     <div class="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -242,8 +225,7 @@ if (
 } else if (currentPage.endsWith('/favorites.html')) {
   activePage = 'favorites'
 
-  // This is an empty list until we add saving functionality.
-  const savedBooks = []
+  const savedBooks = getFavorites()
 
   pageContent = `
     <section>
@@ -270,16 +252,14 @@ if (
       </div>
 
       <section class="mt-10 sm:mt-14" aria-labelledby="saved-books-heading">
-        <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h2 id="saved-books-heading" class="text-2xl font-bold text-[#38352F] sm:text-3xl">
-              Your Saved Books
-            </h2>
+        <div class="mb-6">
+          <h2 id="saved-books-heading" class="text-2xl font-bold text-[#38352F] sm:text-3xl">
+            Your Saved Books
+          </h2>
 
-            <p class="mt-2 text-sm text-[#716B61]">
-              ${savedBooks.length} ${savedBooks.length === 1 ? 'book' : 'books'} saved
-            </p>
-          </div>
+          <p class="mt-2 text-sm text-[#716B61]">
+            ${savedBooks.length} ${savedBooks.length === 1 ? 'book' : 'books'} saved
+          </p>
         </div>
 
         ${savedBooks.length > 0
@@ -296,8 +276,7 @@ if (
 
                 <p class="mx-auto mt-3 max-w-lg leading-7 text-[#716B61]" aria-live="polite">
                   You haven't saved any books yet. Explore the collection
-                  and find a story you love. Your saved books will appear here
-                  when the favorites feature is connected.
+                  and find a story you love.
                 </p>
 
                 <a
@@ -352,8 +331,7 @@ if (
             Keep Favorites
           </h2>
           <p class="mt-3 text-sm leading-7 text-[#716B61]">
-            The Favorites page is designed to give you one place to
-            return to the books you want to keep.
+            Save your favorite books and return to them whenever you like.
           </p>
         </article>
 
@@ -379,7 +357,7 @@ if (
           We want to make the journey from looking for a book to
           discovering a meaningful story simple, welcoming, and enjoyable.
           BookNest is being built to bring book discovery and reading
-          resources together in one <br> easy-to-use experience.
+          resources together in one easy-to-use experience.
         </p>
 
         <a
@@ -513,7 +491,7 @@ if (
   `
 }
 
-// Shared navigation, main content, and footer on every page
+// Render the shared layout and current page
 document.querySelector('#app').innerHTML = `
   <div class="flex min-h-screen flex-col bg-[#F5F0E6] text-[#38352F]">
     ${renderNavigation(activePage)}
@@ -526,7 +504,31 @@ document.querySelector('#app').innerHTML = `
   </div>
 `
 
-// Frontend demonstration only: this form does not send a real email.
+// Handle clicks on favorite buttons
+document.querySelectorAll('.favorite-button').forEach(button => {
+  button.addEventListener('click', () => {
+    const bookId = Number(button.dataset.bookId)
+
+    // Find the selected book in our temporary book collection
+    const book = books.find(item => item.id === bookId)
+
+    if (!book) {
+      return
+    }
+
+    // Add the book if it is not saved; otherwise, remove it
+    if (isFavorite(bookId)) {
+      removeFavorite(bookId)
+    } else {
+      addFavorite(book)
+    }
+
+    // Refresh the current page to update the favorite buttons and list
+    window.location.reload()
+  })
+})
+
+// Contact form demonstration only; no email is sent.
 const contactForm = document.querySelector('#contact-form')
 
 if (contactForm) {
