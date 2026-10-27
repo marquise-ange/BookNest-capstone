@@ -12,14 +12,20 @@ export async function fetchBooks(searchTerm) {
     const params = new URLSearchParams({
         q: searchTerm.trim(),
         fields: 'key,title,author_name,first_publish_year,cover_i',
-        limit: '24',
+        limit: '12',
     })
 
     const url = `${API_URL}?${params.toString()}`
 
+    // Stop waiting if the API takes too long
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 5000)
+
     try {
         // Send the request to the API
-        const response = await fetch(url)
+        const response = await fetch(url, {
+            signal: controller.signal,
+        })
 
         // Check whether the request was successful
         if (!response.ok) {
@@ -41,6 +47,16 @@ export async function fetchBooks(searchTerm) {
         }))
     } catch (error) {
         console.error('Error fetching books:', error)
+
+        if (error.name === 'AbortError') {
+            throw new Error(
+                'The book search took too long. Please check your internet connection and try again.'
+            )
+        }
+
         throw error
+    } finally {
+        // Always clear the timeout
+        clearTimeout(timeoutId)
     }
 }

@@ -89,10 +89,6 @@ function renderBookGrid(bookList = [], isFavoritesPage = false) {
   if (!Array.isArray(bookList) || bookList.length === 0) {
     return `
       <div class="rounded-3xl border border-dashed border-[#C9BBA5] bg-[#FFFEFA] px-6 py-14 text-center">
-        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#E9E0D1] text-2xl" aria-hidden="true">
-          📚
-        </div>
-
         <h3 class="mt-5 text-xl font-bold text-[#38352F]">
           No results found
         </h3>
