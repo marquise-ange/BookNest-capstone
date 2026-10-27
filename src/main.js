@@ -1,3 +1,4 @@
+
 import './style.css'
 import { renderNavigation, renderFooter } from './JS/layout.js'
 import {
@@ -64,7 +65,7 @@ function renderBookCard(book) {
 
       <div class="flex flex-1 flex-col p-5">
         <h3 class="text-lg font-bold leading-snug text-[#38352F]">
-          ${escapeHTML(book.title)}
+          ${escapeHTML(book.title || 'Untitled')}
         </h3>
 
         <p class="mt-2 text-sm text-[#716B61]">
@@ -72,7 +73,8 @@ function renderBookCard(book) {
         </p>
 
         <p class="mt-2 text-xs text-[#806746]">
-          First published: ${escapeHTML(book.firstPublishYear || 'Unknown')}
+          First published:
+          ${escapeHTML(book.firstPublishYear || 'Unknown')}
         </p>
 
         <button
@@ -90,10 +92,10 @@ function renderBookCard(book) {
 
 // Responsive book grid.
 function renderBookGrid(bookList = []) {
-  if (bookList.length === 0) {
+  if (!bookList || bookList.length === 0) {
     return `
       <div class="rounded-2xl border border-dashed border-[#C9BBA5] p-8 text-center text-[#716B61]">
-        No books to display yet.
+        No books found. Please try again later.
       </div>
     `
   }
@@ -113,13 +115,10 @@ if (
   activePage = 'home'
   document.title = 'BookNest | Find Your Next Story'
 
-  const heroImage =
-    './public/images/home.jpg'
-
   pageContent = `
     <section
       class="relative flex min-h-145 items-center overflow-hidden rounded-3xl bg-cover bg-center sm:min-h-165"
-      style="background-image: url('${heroImage}')"
+      style="background-image: url('/images/home.jpg')"
       aria-label="A welcoming library"
     >
       <div class="absolute inset-0 bg-[#211C16]/65"></div>
@@ -182,7 +181,7 @@ if (
       </div>
 
       <div id="featured-books">
-        ${renderBookGrid()}
+        <p class="text-[#716B61]">Loading books...</p>
       </div>
     </section>
 
@@ -212,7 +211,7 @@ if (
       </div>
 
       <img
-        src="./public/images/home2.jpg"
+        src="/images/home2.jpg"
         alt="Books arranged on a bookshelf"
         class="h-72 w-full object-cover sm:h-96 lg:h-full lg:min-h-107.5"
         loading="lazy"
@@ -221,10 +220,29 @@ if (
   `
 
   // BOOKS PAGE
+  // The Explore Books search section will be added later.
 } else if (currentPage.endsWith('/books.html')) {
   activePage = ''
   document.title = 'Explore Books | BookNest'
 
+  pageContent = `
+    <section class="rounded-3xl bg-[#FFFEFA] px-6 py-16 text-center sm:px-12">
+      <h1 class="text-3xl font-bold text-[#38352F]">
+        Explore Books
+      </h1>
+
+      <p class="mt-4 text-[#716B61]">
+        The book search page will be available soon.
+      </p>
+
+      <a
+        href="/index.html"
+        class="mt-7 inline-flex rounded-full bg-[#38352F] px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-[#5B5348]"
+      >
+        Return Home
+      </a>
+    </section>
+  `
 
   // FAVORITES PAGE
 } else if (currentPage.endsWith('/favorites.html')) {
@@ -291,13 +309,16 @@ if (
           </h1>
 
           <p class="mt-6 leading-8 text-[#716B61]">
-            BookNest is a welcoming place for readers to explorebooks, discover authors, and find their next favorite story. We believe reading can inspire curiosity,
-            encourage imagination, and bring new perspectives into our lives.</p>
-
+            BookNest is a welcoming place for readers to explore
+            books, discover authors, and find their next favorite
+            story. We believe reading can inspire curiosity,
+            encourage imagination, and bring new perspectives
+            into our lives.
+          </p>
         </div>
 
         <img
-          src="./public/images/about.jpg"
+          src="/images/about.jpg"
           alt="A bright library filled with bookshelves"
           class="h-72 w-full object-cover sm:h-96 lg:h-full lg:min-h-135"
           loading="lazy"
@@ -324,8 +345,8 @@ if (
       <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
         <article class="overflow-hidden rounded-2xl border border-[#E5DED1] bg-[#FFFEFA]">
           <img
-            src="./public/images/about1.jpg"
-            alt="many standing books"
+            src="/images/about1.jpg"
+            alt="Many books standing on a shelf"
             class="h-48 w-full object-cover"
             loading="lazy"
           />
@@ -344,7 +365,7 @@ if (
 
         <article class="overflow-hidden rounded-2xl border border-[#E5DED1] bg-[#FFFEFA]">
           <img
-            src="./public/images/about2.jpg"
+            src="/images/about2.jpg"
             alt="A notebook and writing materials on a desk"
             class="h-48 w-full object-cover"
             loading="lazy"
@@ -364,7 +385,7 @@ if (
 
         <article class="overflow-hidden rounded-2xl border border-[#E5DED1] bg-[#FFFEFA]">
           <img
-            src="./public/images/about3.jpg"
+            src="/images/about3.jpg"
             alt="A person enjoying a book"
             class="h-48 w-full object-cover"
             loading="lazy"
@@ -377,7 +398,7 @@ if (
 
             <p class="mt-3 text-sm leading-7 text-[#716B61]">
               Make time for reading, learn something new,
-              and enjoy the experience of discovering a story.
+              and enjoy discovering a story.
             </p>
           </div>
         </article>
@@ -411,7 +432,7 @@ if (
         </div>
 
         <img
-          src="./public/images/about4.jpg"
+          src="/images/about4.jpg"
           alt="A peaceful reading space with books"
           class="h-64 w-full rounded-2xl object-cover sm:h-80"
           loading="lazy"
@@ -420,6 +441,7 @@ if (
     </section>
   `
 
+  // PAGE NOT FOUND
 } else {
   activePage = ''
   document.title = 'Page Not Found | BookNest'
@@ -457,7 +479,7 @@ app.innerHTML = `
   </div>
 `
 
-// Load books from Open Library.
+// Load books from the Open Library API.
 async function loadBooks(searchTerm, resultsId, statusId) {
   const results = document.getElementById(resultsId)
   const status = document.getElementById(statusId)
@@ -465,11 +487,17 @@ async function loadBooks(searchTerm, resultsId, statusId) {
   if (!results || !status) return
 
   status.textContent = 'Loading books...'
-  results.innerHTML = ''
+  results.innerHTML = '<p class="text-[#716B61]">Loading books...</p>'
 
   try {
     const books = await fetchBooks(searchTerm)
     currentBooks = books
+
+    if (!books || books.length === 0) {
+      status.textContent = 'No books found.'
+      results.innerHTML = renderBookGrid([])
+      return
+    }
 
     status.textContent = `Showing ${books.length} books.`
     results.innerHTML = renderBookGrid(books)
@@ -477,7 +505,7 @@ async function loadBooks(searchTerm, resultsId, statusId) {
     console.error('Could not load books:', error)
 
     status.textContent =
-      'We could not load the books. Please try again.'
+      'We could not load the books. Please check your connection and try again.'
 
     results.innerHTML = `
       <button
@@ -491,7 +519,7 @@ async function loadBooks(searchTerm, resultsId, statusId) {
   }
 }
 
-// Load featured books on Home.
+// Load featured books on the homepage.
 if (
   currentPage.endsWith('/index.html') ||
   currentPage === '/'
@@ -499,32 +527,7 @@ if (
   loadBooks('fiction', 'featured-books', 'featured-status')
 }
 
-// Load the initial collection on the Books page.
-if (currentPage.endsWith('/books.html')) {
-  loadBooks('fiction', 'books-results', 'books-status')
-}
-
-// Search books without reloading the page.
-const searchForm = document.getElementById('book-search-form')
-
-if (searchForm) {
-  searchForm.addEventListener('submit', async event => {
-    event.preventDefault()
-
-    const input = document.getElementById('book-search')
-    const searchTerm = input.value.trim()
-
-    if (!searchTerm) {
-      document.getElementById('books-status').textContent =
-        'Please enter a title, author, or subject to search.'
-      return
-    }
-
-    await loadBooks(searchTerm, 'books-results', 'books-status')
-  })
-}
-
-// Handle favorites and retry buttons.
+// Handle favorite and retry button clicks.
 app.addEventListener('click', async event => {
   const target = event.target
 
@@ -533,12 +536,10 @@ app.addEventListener('click', async event => {
   const retryButton = target.closest('#retry-books')
 
   if (retryButton) {
-    if (currentPage.endsWith('/books.html')) {
-      const input = document.getElementById('book-search')
-      const term = input?.value.trim() || 'fiction'
-
-      await loadBooks(term, 'books-results', 'books-status')
-    } else {
+    if (
+      currentPage.endsWith('/index.html') ||
+      currentPage === '/'
+    ) {
       await loadBooks('fiction', 'featured-books', 'featured-status')
     }
 
