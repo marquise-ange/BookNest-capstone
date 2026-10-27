@@ -3,25 +3,24 @@ export function renderNavigation(activePage = 'home') {
     const links = [
         { label: 'Home', href: '/index.html', page: 'home' },
         { label: 'About', href: '/about.html', page: 'about' },
-        { label: 'Books', href: '/books.html', page: 'books' },
         { label: 'Favorites', href: '/favorites.html', page: 'favorites' },
-        { label: 'Contact', href: '/contact.html', page: 'contact' },
     ]
 
     return `
-    <header class="sticky top-0 z-20 border-b border-[#E5DED1] bg-[#FFFEFA]">
+    <header class="sticky top-0 z-20 border-b border-[#E5DED1] bg-[#FFFEFA]/95 backdrop-blur">
       <nav
-        class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-5 sm:px-8"
+        class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8"
         aria-label="Main navigation"
       >
         <a
           href="/index.html"
           class="text-2xl font-bold tracking-tight text-[#38352F]"
+          aria-label="BookNest home"
         >
           BookNest<span class="text-[#A28B6A]">.</span>
         </a>
 
-        <div class="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm font-medium">
+        <div class="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm font-medium">
           ${links.map(link => `
             <a
               href="${link.href}"
@@ -43,24 +42,18 @@ export function renderNavigation(activePage = 'home') {
 export function renderFooter() {
     return `
     <footer class="mt-auto border-t border-[#E5DED1] bg-[#FFFEFA]">
-      <div class="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-8 text-sm text-[#716B61] sm:flex-row sm:items-center sm:justify-between sm:px-8">
-        <a
-          href="/index.html"
-          class="font-semibold text-[#38352F]"
-        >
-          BookNest.
+      <div class="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-7 text-sm text-[#716B61] sm:flex-row sm:items-center sm:justify-between sm:px-8">
+        <a href="/index.html" class="text-lg font-bold text-[#38352F]">
+          BookNest<span class="text-[#A28B6A]">.</span>
         </a>
 
-        <p>
-          &copy; ${new Date().getFullYear()} BookNest. Made for book lovers.
-        </p>
+        <p>&copy; ${new Date().getFullYear()} BookNest. Made for book lovers.</p>
 
-        <a
-          href="/contact.html"
-          class="transition-colors hover:text-[#38352F]"
-        >
-          Get in touch
-        </a>
+        <div class="flex gap-5">
+          <a href="/index.html" class="transition-colors hover:text-[#38352F]">Home</a>
+          <a href="/about.html" class="transition-colors hover:text-[#38352F]">About</a>
+          <a href="/favorites.html" class="transition-colors hover:text-[#38352F]">Favorites</a>
+        </div>
       </div>
     </footer>
   `

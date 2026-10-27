@@ -1,4 +1,3 @@
-
 const STORAGE_KEY = 'booknest-favorites'
 
 // Get all saved favorite books from localStorage
