@@ -74,7 +74,7 @@ function renderBookCard(book) {
 
         <button
           type="button"
-          class="favorite-button mt-5 rounded-xl border border-[#806746] px-4 py-3 text-sm font-semibold text-[#806746] transition hover:bg-[#806746] hover:text-white"
+          class="favorite-button mt-auto min-h-12 w-full rounded-xl border border-[#806746] px-3 py-3 text-sm font-semibold text-[#806746] transition hover:bg-[#806746] hover:text-white"
           data-book-id="${escapeHTML(bookId)}"
           aria-pressed="${saved}"
         >
@@ -85,7 +85,7 @@ function renderBookCard(book) {
   `
 }
 
-function renderBookGrid(bookList = []) {
+function renderBookGrid(bookList = [], isFavoritesPage = false) {
   if (!Array.isArray(bookList) || bookList.length === 0) {
     return `
       <div class="rounded-3xl border border-dashed border-[#C9BBA5] bg-[#FFFEFA] px-6 py-14 text-center">
@@ -104,14 +104,12 @@ function renderBookGrid(bookList = []) {
       </div>
     `
   }
-
   return `
-    <div class="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      ${bookList.map(renderBookCard).join('')}
-    </div>
-  `
+  <div class="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    ${bookList.map(renderBookCard).join('')}
+  </div>
+`
 }
-
 function renderLoading() {
   return `
     <div class="flex flex-col items-center justify-center rounded-3xl border border-[#E5DED1] bg-[#FFFEFA] px-6 py-12 text-center">
@@ -393,7 +391,7 @@ if (currentPage.endsWith('/index.html') || currentPage === '/') {
 
       <div id="favorites-results" class="mt-8">
         ${savedBooks.length
-      ? renderBookGrid(savedBooks)
+      ? renderBookGrid(savedBooks, true)
       : `
               <div class="rounded-3xl border border-dashed border-[#C9BBA5] bg-[#FFFEFA] px-6 py-12 text-center sm:px-12 sm:py-16">
                 <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#E9E0D1] text-2xl" aria-hidden="true">♡</div>
