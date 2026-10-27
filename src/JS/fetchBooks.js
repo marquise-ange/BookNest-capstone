@@ -12,7 +12,7 @@ export async function fetchBooks(searchTerm) {
     const params = new URLSearchParams({
         q: searchTerm.trim(),
         fields: 'key,title,author_name,first_publish_year,cover_i',
-        limit: '12',
+        limit: '24',
     })
 
     const url = `${API_URL}?${params.toString()}`
