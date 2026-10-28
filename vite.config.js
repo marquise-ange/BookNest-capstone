@@ -12,6 +12,7 @@ export default defineConfig({
                 home: resolve(import.meta.dirname, 'index.html'),
                 about: resolve(import.meta.dirname, 'about.html'),
                 favorites: resolve(import.meta.dirname, 'favorites.html'),
+                books: resolve(import.meta.dirname, 'books.html'),
             },
         },
     },
