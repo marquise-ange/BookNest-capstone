@@ -19,7 +19,7 @@ export async function fetchBooks(searchTerm) {
 
     // Stop waiting if the API takes too long
     const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 5000)
+    const timeoutId = setTimeout(() => controller.abort(), 10000)
 
     try {
         // Send the request to the API

@@ -91,16 +91,16 @@ export function renderFooter() {
     return `
     <footer class="mt-auto border-t border-[#E5DED1] bg-[#FFFEFA]">
       <div class="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-7 text-sm text-[#716B61] sm:flex-row sm:items-center sm:justify-between sm:px-8">
-        <a href="/index.html" class="text-lg font-bold text-[#38352F]">
+        <a href="./index.html" class="text-lg font-bold text-[#38352F]">
           BookNest<span class="text-[#A28B6A]">.</span>
         </a>
 
         <p>&copy; ${new Date().getFullYear()} BookNest. Made for book lovers.</p>
 
         <div class="flex gap-5">
-          <a href="/index.html" class="transition-colors hover:text-[#38352F]">Home</a>
-          <a href="/about.html" class="transition-colors hover:text-[#38352F]">About</a>
-          <a href="/favorites.html" class="transition-colors hover:text-[#38352F]">Favorites</a>
+          <a href="./index.html" class="transition-colors hover:text-[#38352F]">Home</a>
+          <a href="./about.html" class="transition-colors hover:text-[#38352F]">About</a>
+          <a href="./favorites.html" class="transition-colors hover:text-[#38352F]">Favorites</a>
         </div>
       </div>
     </footer>
