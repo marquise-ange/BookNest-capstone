@@ -3,7 +3,7 @@ const API_URL = 'https://openlibrary.org/search.json'
 
 // Fetch books from the Open Library API
 export async function fetchBooks(searchTerm) {
-    // Check that the user entered a search term
+    // Check that the user entered a search term,
     if (!searchTerm || !searchTerm.trim()) {
         throw new Error('Please enter a book title to search.')
     }
@@ -12,7 +12,7 @@ export async function fetchBooks(searchTerm) {
     const params = new URLSearchParams({
         q: searchTerm.trim(),
         fields: 'key,title,author_name,first_publish_year,cover_i',
-        limit: '12',
+        limit: '120',
     })
 
     const url = `${API_URL}?${params.toString()}`

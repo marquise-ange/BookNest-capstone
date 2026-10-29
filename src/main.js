@@ -18,6 +18,7 @@ let pageContent = ''
 let lastHomeSearch = 'fiction'
 let lastBooksSearch = 'fiction'
 
+//defencing programming
 if (!app) {
   throw new Error('The #app element was not found in the HTML.')
 }
